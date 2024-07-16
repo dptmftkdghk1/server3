@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>아동급식카드가맹점정보</h1>
+
+    <select name="" id="address">
+        <option value="">시군구면</option>
+        <option value="수성구">수성구</option>
+        <option value="중구">중구</option>
+    </select>
+
+    <select name="" id="delivery">
+        <option value="">배달가능여부</option>
+        <option value="N">N</option>
+        <option value="Y">Y</option>
+    </select>
+
+    <button>조회</button>
+
+    <table border="1">
+        <tr>
+            <td>순번</td>
+            <td>프랜차이즈명</td>
+            <td>가맹점명</td>
+            <td>전화번호</td>
+            <td>도로명주소</td>
+            <td>평일운영시간</td>
+            <td>토요일 운영 시간</td>
+            <td>배달가능여부</td>
+            <td>좋아요하기</td>
+        </tr>
+
+        <tr th:each="data, stat : ${dataList}">
+            <td th:text="|${stat.count}|">1</td>
+            <td class="french" th:text="${data['프랜차이즈명']}">프랜차이즈명</td>
+            <td class="store" th:text="${data['가맹점명']}">가맹점명</td>
+            <td th:text="${data['관리기관전화번호']}">전화번호</td>
+            <td th:text="${data['소재지도로명주소']}">도로명주소</td>
+            <td th:text="${data['평일운영시작시각']}">평일운영시간</td>
+            <td th:text="${data['토요일운영시작시각']}">토요일 운영 시간</td>
+            <td class="deliveryvalue" th:text="${data['배달가능여부']}">배달가능여부</td>
+            <td><button id="goodbtn" onclick="like_request(this)">좋아요하기</button></td>
+            <td><input class="goodId" type="text" th:value="${data['가맹점ID']}"></td>
+        </tr>
+    </table>
+</body>
+</html>
+
+<script>
+    // const tableList = document.getElementById('tableList').length;
+    // console.log(tableList);
+    // var arrayline = [];
+    // var objectline = {
+    //     goodid: document.getElementById("goodId").value
+    // };
+    //
+    // const checkbtn = document.getElementById("goodbtn");
+
+
+    const french = document.getElementById('french');
+    const store = document.getElementById('store');
+    const deliveryvalue = document.getElementById('deliveryvalue');
+
+
+    function like_request(button){
+        const tr = button.parentElement.parentElement;
+        const french = tr.querySelector('.french').textContent;
+        const delivery = tr.querySelector('.deliveryvalue').textContent;
+        const store =tr.querySelector('.store').textContent;
+        const id = tr.querySelector('.goodId').value;
+        fetch(`/like`,{
+            method: "POST",
+            headers: "application/json",
+            body: JSON.stringify({
+                id: id,
+                가맹점명: store,
+                프랜차이즈명: french,
+                배달가능여부: delivery,
+            })
+        })
+    }
+
+
+</script>
